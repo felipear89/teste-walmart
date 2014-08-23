@@ -13,8 +13,8 @@ public class ConexaoTest {
 		
 		new Conexao(cidadeTeste1, cidadeTeste2, 10);
 		
-		Assert.assertTrue(!cidadeTeste1.getConexoes().isEmpty());
-		Assert.assertTrue(!cidadeTeste2.getConexoes().isEmpty());
+		Assert.assertTrue(cidadeTeste1.getNumeroDeConexoes() > 0);
+		Assert.assertTrue(cidadeTeste2.getNumeroDeConexoes() > 0);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -23,7 +23,7 @@ public class ConexaoTest {
 		Cidade cidadeTeste2 = new Cidade("Cidade Teste 2");
 		
 		new Conexao(cidadeTeste1, cidadeTeste2, 10);
-		new Conexao(cidadeTeste2, cidadeTeste1, 10);
+		new Conexao(cidadeTeste2, cidadeTeste1, 20);
 	}
 	
 	@Test
@@ -32,10 +32,10 @@ public class ConexaoTest {
 		Cidade cidadeTeste2 = new Cidade("Cidade Teste 2");
 		Conexao conexao = new Conexao(cidadeTeste1, cidadeTeste2, 10);
 		
-		Cidade cidadeConectada = conexao.getCidadeConectada(cidadeTeste1);
-		Assert.assertEquals(cidadeConectada, cidadeTeste2);
+		Cidade cidadeNaOutraPonta = conexao.getCidadeConectada(cidadeTeste1);
+		Assert.assertEquals(cidadeNaOutraPonta, cidadeTeste2);
 		
-		cidadeConectada = conexao.getCidadeConectada(cidadeTeste2);
-		Assert.assertEquals(cidadeConectada, cidadeTeste1);
+		cidadeNaOutraPonta = conexao.getCidadeConectada(cidadeTeste2);
+		Assert.assertEquals(cidadeNaOutraPonta, cidadeTeste1);
 	}
 }
