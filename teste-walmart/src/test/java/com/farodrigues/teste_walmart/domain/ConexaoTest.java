@@ -13,8 +13,8 @@ public class ConexaoTest {
 		
 		new Conexao(cidadeTeste1, cidadeTeste2, 10);
 		
-		Assert.assertTrue(cidadeTeste1.getNumeroDeConexoes() > 0);
-		Assert.assertTrue(cidadeTeste2.getNumeroDeConexoes() > 0);
+		Assert.assertTrue(cidadeTeste1.getNumeroDeConexoes() == 1);
+		Assert.assertTrue(cidadeTeste2.getNumeroDeConexoes() == 1);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
