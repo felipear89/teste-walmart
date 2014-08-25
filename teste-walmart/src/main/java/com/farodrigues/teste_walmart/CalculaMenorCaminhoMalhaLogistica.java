@@ -24,11 +24,10 @@ public class CalculaMenorCaminhoMalhaLogistica {
 
 	private final MalhaLogistica malhaLogistica;
 	private Set<Cidade> cidadesVisitadas;
-	private Cidade cidadeAnterior;
 	private Queue<Cidade> filaCidadesParaVisitar;
 
 	// Armazena a melhor cidade anterior.
-	private Map<Cidade, MelhorCidadeAnteriorDistancia> menorCaminho = new HashMap<Cidade, MelhorCidadeAnteriorDistancia>();
+	private Map<Cidade, MelhorCidadeAnteriorDistancia> menorCaminho;
 	private final Cidade cidadeOrigem;
 
 	public CalculaMenorCaminhoMalhaLogistica(MalhaLogistica malhaLogistica, Cidade cidadeOrigem) {
@@ -41,21 +40,14 @@ public class CalculaMenorCaminhoMalhaLogistica {
 		}
 		this.malhaLogistica = malhaLogistica;
 		this.cidadeOrigem = cidadeOrigem;
-		for (Cidade c : this.malhaLogistica.getCidades()) {
-			if (c.equals(cidadeOrigem)) {
-				menorCaminho.put(c, new MelhorCidadeAnteriorDistancia(null, 0));
-			} else {
-				menorCaminho.put(c, new MelhorCidadeAnteriorDistancia(null, Integer.MAX_VALUE));
-			}
-		}
 	}
 
 	public void visitarTodasAsCidades() {
 		logger.info("Iniciando a visita nas cidades. Primeira cidade: " + cidadeOrigem.toString());
-		
+
 		initVisitacao();
 
-		while(!filaCidadesParaVisitar.isEmpty()) {
+		while (!filaCidadesParaVisitar.isEmpty()) {
 			Cidade cidadeAtual = filaCidadesParaVisitar.poll();
 			cidadesVisitadas.add(cidadeAtual);
 			for (Conexao conexao : cidadeAtual.getConexoes()) {
@@ -67,36 +59,23 @@ public class CalculaMenorCaminhoMalhaLogistica {
 			}
 		}
 
-		
 		logger.info("Todas as cidades foram visitadas");
 	}
 
 	private void initVisitacao() {
 		cidadesVisitadas = new HashSet<Cidade>();
+		menorCaminho = new HashMap<Cidade, MelhorCidadeAnteriorDistancia>();
 		filaCidadesParaVisitar = new LinkedList<Cidade>();
 		filaCidadesParaVisitar.add(cidadeOrigem);
+		initMenorCaminho(cidadeOrigem);
 	}
-
-	public void visitarTodasAsCidades(Cidade cidadeInicial) {
-
-		Set<Conexao> conexoesLocal = cidadeInicial.getConexoes();
-		
-		
-		
-		for (Conexao c : conexoesLocal) {
-			Cidade cidadeConectada = c.getCidadeConectada(cidadeInicial);
-
-			if (cidadeAnterior != null && cidadeConectada == cidadeAnterior) {
-				continue;
-			}
-			
-			logger.info("Indo de " + cidadeInicial + " para " + cidadeConectada);
-
-			processar(cidadeConectada, c);
-			if (!cidadesVisitadas.contains(cidadeConectada)) {
-				cidadeAnterior = cidadeInicial;
-				cidadesVisitadas.add(cidadeConectada);
-				visitarTodasAsCidades(cidadeConectada);
+	
+	private void initMenorCaminho(Cidade cidadeOrigem) {
+		for (Cidade c : this.malhaLogistica.getCidades()) {
+			if (c.equals(cidadeOrigem)) {
+				menorCaminho.put(c, new MelhorCidadeAnteriorDistancia(null, 0));
+			} else {
+				menorCaminho.put(c, new MelhorCidadeAnteriorDistancia(null, Integer.MAX_VALUE));
 			}
 		}
 	}
@@ -105,8 +84,6 @@ public class CalculaMenorCaminhoMalhaLogistica {
 		Cidade outraCidade = conexao.getCidadeConectada(cidadeAtual);
 		Integer distanciaTotalAnterior = menorCaminho.get(outraCidade).getMelhorDistanciaTotal();
 		Integer distanciaTotalAPartirDaPrimeiraCidade = conexao.getDistancia() + distanciaTotalAnterior;
-		//logger.info("A distancia entre " + cidadeAtual + " e " + outraCidade + " é " + conexao.getDistancia());
-		//logger.info("Atualmente a menor distancia da " + cidadeAtual + " é de: " + distanciaTotalAPartirDaPrimeiraCidade);
 		if (distanciaTotalAPartirDaPrimeiraCidade < menorCaminho.get(cidadeAtual).getMelhorDistanciaTotal()) {
 			menorCaminho.get(cidadeAtual).atualizar(outraCidade, distanciaTotalAPartirDaPrimeiraCidade);
 		}
@@ -144,7 +121,7 @@ public class CalculaMenorCaminhoMalhaLogistica {
 		return cidadesVisitadas.size();
 	}
 
-	public void getMenorCaminho(Cidade cidadeDestino) {
+	public List<Cidade> getMenorCaminho(Cidade cidadeDestino) {
 		visitarTodasAsCidades();
 		logger.info("O menor caminho da cidade " + cidadeOrigem + " até a cidade " + cidadeDestino + " é:");
 		Cidade cidadeLoop = cidadeDestino;
@@ -152,23 +129,21 @@ public class CalculaMenorCaminhoMalhaLogistica {
 		List<Cidade> caminho = new ArrayList<Cidade>();
 		do {
 			melhorCidadeAnteriorDistancia = menorCaminho.get(cidadeLoop);
-			//logger.info(cidadeLoop + " distância: " + melhorCidadeAnteriorDistancia.getMelhorDistanciaTotal() + "km");
 			caminho.add(cidadeLoop);
 			cidadeLoop = melhorCidadeAnteriorDistancia.getCidade();
 		} while (cidadeOrigem != cidadeLoop);
 		caminho.add(cidadeOrigem);
-		
+
 		Collections.reverse(caminho);
-		
-		int total = 0;
-		for(Cidade cidade : caminho) {
+
+		for (Cidade cidade : caminho) {
 			MelhorCidadeAnteriorDistancia melhorCaminho = menorCaminho.get(cidade);
-			if (melhorCaminho != null) {				
+			if (melhorCaminho != null) {
 				logger.info("Para: " + cidade.toString() + "  " + melhorCaminho.getMelhorDistanciaTotal());
-				total += melhorCaminho.getMelhorDistanciaTotal();
 			} else {
 				logger.info("Saindo de: " + cidade.toString());
 			}
 		}
+		return caminho;
 	}
 }
