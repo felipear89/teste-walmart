@@ -47,7 +47,7 @@ POST http://localhost:8080/services/novoMapa
 ?origem=A&destino=F&autonomia=10&valorLitroCombustivel=2.5
 ```
 
-**Exemplo de parâmetro do serviço "novoMapa"**
+**Exemplo de request para o serviço "novoMapa"**
 ```
 {
    "nome":"MAPA DE SP",
