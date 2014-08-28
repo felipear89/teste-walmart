@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,11 +56,11 @@ public class WalmartRest {
 		
 	}
 	
-	@RequestMapping(value = "/menorValorDeEntrega", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody MenorValorDeEntrega menorRota(@RequestBody EntregaInfoTO entregaInfoTO) {
+	@RequestMapping(value = "/menorValorDeEntrega", method = RequestMethod.GET)
+	public @ResponseBody MenorValorDeEntrega menorRota(@RequestParam("origem") String origem, @RequestParam("destino") String destino, @RequestParam("autonomia") Double autonomia, @RequestParam("valorLitroCombustivel") Double valorLitroCombustivel) {
 		
 		MenorValorDeEntrega menorValorDeEntrega = new MenorValorDeEntrega();
-		List<Rota> menorRota = mapaService.getMenorRota(entregaInfoTO.getOrigem(), entregaInfoTO.getDestino());
+		List<Rota> menorRota = mapaService.getMenorRota(origem, destino);
 		Integer distanciaTotal = 0;
 		menorValorDeEntrega.getPontos().add(menorRota.get(0).getOrigem());
 		for (Rota rota : menorRota) {
@@ -67,7 +68,7 @@ public class WalmartRest {
 			distanciaTotal += rota.getDistancia();
 		};
 		
-		CalculaCustoViagem calculaCustoViagem = new CalculaCustoViagem(entregaInfoTO.getValorLitroCombustivel(), distanciaTotal, entregaInfoTO.getAutonomia());
+		CalculaCustoViagem calculaCustoViagem = new CalculaCustoViagem(valorLitroCombustivel, distanciaTotal, autonomia);
 		menorValorDeEntrega.setValor(calculaCustoViagem.getCustoTotal());
 		return menorValorDeEntrega;
 	}

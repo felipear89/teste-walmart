@@ -1,5 +1,6 @@
 package com.farodrigues.teste_walmart.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,16 +68,13 @@ public class WalmartRestTest extends AppConfWebTest {
 	@Test
 	public void deveRetornarAmenorValorDeEntrega() throws Exception {
 		popularRotas();
-		EntregaInfoTO entregaInfoTO = new EntregaInfoTO();
-		entregaInfoTO.setOrigem("A");
-		entregaInfoTO.setDestino("D");
-		entregaInfoTO.setAutonomia(10.0);
-		entregaInfoTO.setValorLitroCombustivel(2.5);
 		
 		MvcResult mvcReturn = this.mvc.perform(
-				post("/services/menorValorDeEntrega")
-				.contentType(APPLICATION_JSON_UTF8)
-				.content(gson.toJson((entregaInfoTO)))
+				get("/services/menorValorDeEntrega")
+				.param("origem", "A")
+				.param("destino", "D")
+				.param("autonomia", "10")
+				.param("valorLitroCombustivel", "2.5")
 				).andExpect(status().isOk())
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andReturn();
