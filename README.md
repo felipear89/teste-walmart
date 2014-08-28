@@ -116,4 +116,9 @@ POST http://localhost:8080/services/novoMapa
 }
 ```
 
+O sistema está disponivel na web através do caminho:
 
+```
+http://162.243.57.36:8080/services/novoMapa
+http://162.243.57.36:8080/services/menorValorDeEntrega
+```
