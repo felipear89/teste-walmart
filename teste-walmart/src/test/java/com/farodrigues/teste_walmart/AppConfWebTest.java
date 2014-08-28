@@ -2,10 +2,14 @@ package com.farodrigues.teste_walmart;
 
 import java.nio.charset.Charset;
 
+import javax.transaction.Transactional;
+
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -15,6 +19,9 @@ import com.google.gson.Gson;
 
 @SpringApplicationConfiguration(classes = App.class)
 @WebAppConfiguration
+@ActiveProfiles("test")
+@TransactionConfiguration(defaultRollback=true)
+@Transactional
 public class AppConfWebTest {
 
 	@Autowired
