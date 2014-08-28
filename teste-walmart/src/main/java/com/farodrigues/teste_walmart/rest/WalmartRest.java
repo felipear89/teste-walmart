@@ -21,6 +21,7 @@ import com.farodrigues.teste_walmart.domain.Rota;
 import com.farodrigues.teste_walmart.service.MapaService;
 
 @RestController
+@RequestMapping("/services")
 public class WalmartRest {
 
 	@Autowired

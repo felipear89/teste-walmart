@@ -1,7 +1,7 @@
 package com.farodrigues.teste_walmart;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class App {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(App.class, args);
+		new SpringApplicationBuilder(App.class).showBanner(false).run(args);
 	}
 
 }

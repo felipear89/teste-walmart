@@ -36,9 +36,8 @@ public class WalmartRestTest extends AppConfWebTest {
 		rotas.add(new RotaTO("São Paulo", "Ourinhos", 380));
 
 		mapaTO.setRotas(rotas);
-
 		this.mvc.perform(
-				post("/novoMapa")
+				post("/services/novoMapa")
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(gson.toJson((mapaTO))))
 				.andExpect(status().isOk());
@@ -48,7 +47,7 @@ public class WalmartRestTest extends AppConfWebTest {
 	public void deveInvalidarCadastroDeMapaSemNome() throws Exception {
 		MapaTO mapaTO = new MapaTO();
 		this.mvc.perform(
-				post("/novoMapa")
+				post("/services/novoMapa")
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(gson.toJson((mapaTO))))
 				.andExpect(status().isBadRequest());
@@ -59,7 +58,7 @@ public class WalmartRestTest extends AppConfWebTest {
 		MapaTO mapaTO = new MapaTO();
 		mapaTO.setNome("Mapa zero");
 		this.mvc.perform(
-				post("/novoMapa")
+				post("/services/novoMapa")
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(gson.toJson((mapaTO))))
 				.andExpect(status().isBadRequest());
@@ -73,8 +72,9 @@ public class WalmartRestTest extends AppConfWebTest {
 		entregaInfoTO.setDestino("D");
 		entregaInfoTO.setAutonomia(10.0);
 		entregaInfoTO.setValorLitroCombustivel(2.5);
+		
 		MvcResult mvcReturn = this.mvc.perform(
-				post("/menorValorDeEntrega")
+				post("/services/menorValorDeEntrega")
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(gson.toJson((entregaInfoTO)))
 				).andExpect(status().isOk())
