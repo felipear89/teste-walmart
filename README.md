@@ -14,7 +14,7 @@ create database walmart;
 create database test_walmart;
 ```
 
-* Atualizar os dados do datasource (url, username, password)
+* Atualizar os dados do datasource (url, username, password) no arquivo ./teste-walmart/src/main/resources/application.properties
 ```
 spring.datasource.url: jdbc:mysql://localhost/walmart
 spring.datasource.username: root
